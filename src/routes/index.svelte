@@ -24,15 +24,9 @@
 	}
 
 	#timer {
-		font-size: 120px;
+		font-size: 200px;
 		padding: 20px;
 		text-align: center;
-	}
-
-	@media (min-width: 480px) {
-		h1 {
-			font-size: 4em;
-		}
 	}
 </style>
 
@@ -42,14 +36,13 @@
 	let interval
 	let seconds = ''
 	let audio
+	let message = 'start'
 
 	onMount(() => {
 		audio = document.getElementById("myAudio"); 
 	})
 
-	function handleClick() {
-		audio.load()
-		seconds = 5
+	function initInterval() {
 		interval = setInterval(() => {
 			if (seconds > 0) {
 				seconds -= 1
@@ -62,6 +55,18 @@
 			}
 		}, 1000)
 	}
+
+	function handleClick() {
+		seconds = 5
+		if (message === 'stop') {
+			clearInterval(interval)
+			message = 'start'
+		} else {
+			audio.load()
+			message = 'stop'
+			initInterval()
+		}
+	}
 </script>
 
 <svelte:head>
@@ -72,7 +77,7 @@
 
 
 <section>
-	<div id="btn-start" on:click={handleClick}>Start</div>
+	<div id="btn-start" on:click={handleClick}>{message}</div>
 	<div id="timer">{seconds}</div>
 </section>
 
