@@ -1,88 +1,98 @@
+<script>
+  import { onMount } from 'svelte';
+
+  import { search } from '../utils/dictionary'
+
+  let definitions = ''
+  let inputRef = null;
+  let term
+
+  onMount(() => {
+    inputRef.focus()
+	});
+
+  function getDefinitions(data) {
+    if (Array.isArray(data) && data.length) {
+      const { meanings } = data[0]
+
+      if (Array.isArray(meanings) && meanings.length) {
+        return meanings[0].definitions
+      }
+    }
+
+    return []
+  }
+
+  async function handleClick() {
+    term = inputRef.value
+    definitions = []
+
+    if (term) {
+      const response = await search(term)
+
+      definitions = getDefinitions(response).slice(0, 3)
+    }
+  }
+
+  function handleKeyDown(event) {
+    if (event.keyCode === 13) {
+      handleClick()
+    }
+  }
+</script>
 <style>
-	h1 {
-		text-align: center;
-		margin: 0 auto;
-	}
+  section {
+    display: flex;
+    flex-direction: column;
+  }
 
-	h1 {
-		font-size: 2.8em;
-		text-transform: uppercase;
-		font-weight: 700;
-		margin: 0 0 0.5em 0;
-	}
+  input[type=text] {
+    padding: 6px;
+    font-size: 30px;
+    margin-bottom: 12px;
+  }
 
-	section {
-		text-align: center;
-	}
+  h1 {
+    text-transform: capitalize;
+    margin: 0px;
+  }
 
-	#btn-start {
-		display: inline-block;
-		padding: 20px;
-		border: 2px solid #ff3e00;
-		font-size: 40px;
-		text-transform: uppercase;
-	}
+  div {
+    font-size: 20px;
+  }
 
-	#timer {
-		font-size: 200px;
-		padding: 20px;
-		text-align: center;
-	}
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    padding: 12px 0;
+    border-bottom: 1px solid #333;
+  }
 </style>
 
-<script>
-	import { onMount } from 'svelte';
-
-	let interval
-	let seconds = ''
-	let audio
-	let message = 'start'
-
-	onMount(() => {
-		audio = document.getElementById("myAudio"); 
-	})
-
-	function initInterval() {
-		interval = setInterval(() => {
-			if (seconds > 0) {
-				seconds -= 1
-				if (seconds === 0) {
-					audio.play()
-				}
-			}
-			else {
-				clearInterval(interval)
-			}
-		}, 1000)
-	}
-
-	function handleClick() {
-		seconds = 5
-		if (message === 'stop') {
-			clearInterval(interval)
-			message = 'start'
-		} else {
-			audio.load()
-			message = 'stop'
-			initInterval()
-		}
-	}
-</script>
-
-<svelte:head>
-	<title>Menciona</title>
-</svelte:head>
-
-<h1>Menciona</h1>
-
-
 <section>
-	<div id="btn-start" on:click={handleClick}>{message}</div>
-	<div id="timer">{seconds}</div>
-</section>
+  <input type="text" name="term" on:keydown={handleKeyDown} bind:this={inputRef} on:focusout={handleClick} />
 
-<audio id="myAudio">
-  <source src="finish.wav" type="audio/wav">
-	<source src="finish.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
+  <div>
+    {#if term}
+      <h1>{term}</h1>
+    {/if}
+    {#if definitions}
+      <ul>
+        {#each definitions as { definition, example }}
+          <li>
+            {definition}
+            <br /><br />
+            {#if example}
+              <b>Ejemplo:</b>
+              {example}
+            {/if}
+          </li>
+        {/each}
+      </ul>
+    {/if}
+  </div>
+</section>

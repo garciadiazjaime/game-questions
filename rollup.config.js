@@ -21,7 +21,8 @@ export default {
 		plugins: [
 			replace({
 				'process.browser': true,
-				'process.env.NODE_ENV': JSON.stringify(mode)
+				'process.env.NODE_ENV': JSON.stringify(mode),
+				'process.env.DICTONARY_TOKEN': process.env.DICTONARY_TOKEN
 			}),
 			svelte({
 				dev,
@@ -65,7 +66,8 @@ export default {
 		plugins: [
 			replace({
 				'process.browser': false,
-				'process.env.NODE_ENV': JSON.stringify(mode)
+				'process.env.NODE_ENV': JSON.stringify(mode),
+				'process.env.DICTONARY_TOKEN': ''
 			}),
 			svelte({
 				generate: 'ssr',
@@ -90,7 +92,8 @@ export default {
 			resolve(),
 			replace({
 				'process.browser': true,
-				'process.env.NODE_ENV': JSON.stringify(mode)
+				'process.env.NODE_ENV': JSON.stringify(mode),
+				'process.env.DICTONARY_TOKEN': ''
 			}),
 			commonjs(),
 			!dev && terser()
