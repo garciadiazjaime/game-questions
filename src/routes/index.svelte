@@ -2,12 +2,15 @@
   import { onMount } from 'svelte';
 
   import { search } from '../utils/dictionary'
+  import WebSql from '../utils/web-sql'
 
   let definitions = ''
   let inputRef = null;
-  let term
+  let term = ''
+  let webSql = null
 
   onMount(() => {
+    webSql = WebSql()
     inputRef.focus()
 	});
 
@@ -16,14 +19,17 @@
       const { meanings } = data[0]
 
       if (Array.isArray(meanings) && meanings.length) {
-        return meanings[0].definitions
+        const { definitions} = meanings[0]
+        webSql.saveWord(term, definitions)
+
+        return definitions
       }
     }
 
     return []
   }
 
-  async function handleClick() {
+  async function searchTerm() {
     term = inputRef.value
     definitions = []
 
@@ -34,9 +40,9 @@
     }
   }
 
-  function handleKeyDown(event) {
+  async function handleKeyDown(event) {
     if (event.keyCode === 13) {
-      handleClick()
+      await searchTerm()
     }
   }
 </script>
@@ -74,7 +80,7 @@
 </style>
 
 <section>
-  <input type="text" name="term" on:keydown={handleKeyDown} bind:this={inputRef} on:focusout={handleClick} />
+  <input type="text" name="term" on:keydown={handleKeyDown} bind:this={inputRef} on:focusout={searchTerm} />
 
   <div>
     {#if term}
