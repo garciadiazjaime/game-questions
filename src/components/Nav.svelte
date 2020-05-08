@@ -51,6 +51,7 @@
 <nav>
 	<ul>
 		<li><a class:selected='{segment === undefined}' href='/'>home</a></li>
+		<li><a class:selected='{segment === 'flashcards'}' href='/flashcards'>flashcards</a></li>
 		<li><a class:selected='{segment === 'countdown'}' href='/countdown'>countdown</a></li>
 	</ul>
 </nav>

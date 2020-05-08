@@ -7,13 +7,27 @@ function WebSql() {
 
   return {
     saveWord(word, definition) {
-      if (word && Array.isArray(definition) && definition.length) {
-        db.transaction(tx => {
-          const query = `INSERT INTO WORD (word, definition) VALUES ("${word}", '${JSON.stringify(definition.slice(0, 3))}')`
-
-          tx.executeSql(query);
-        })
+      if (!word || !Array.isArray(definition) || !definition.length) {
+        return
       }
+
+      db.transaction(tx => {
+        const query = `INSERT INTO WORD (word, definition) VALUES ("${word}", '${JSON.stringify(definition.slice(0, 3))}')`
+
+        tx.executeSql(query);
+      })
+    },
+
+    getAllWords() {
+      return new Promise(resolve => {
+
+        db.transaction(tx => {
+          tx.executeSql('SELECT * FROM WORD', [], (tx, results) => {
+            resolve(results)
+          });
+        })
+
+      })
     }
   }
 }

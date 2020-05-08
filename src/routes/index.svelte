@@ -46,6 +46,7 @@
     }
   }
 </script>
+
 <style>
   section {
     display: flex;
