@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
 
   import { search } from '../utils/dictionary'
-  import WebSql from '../utils/web-sql'
+  import { saveWord } from '../utils/local-storage'
 
   let definitions = ''
   let inputRef = null;
@@ -10,7 +10,6 @@
   let webSql = null
 
   onMount(() => {
-    webSql = WebSql()
     inputRef.focus()
 	});
 
@@ -20,7 +19,8 @@
 
       if (Array.isArray(meanings) && meanings.length) {
         const { definitions} = meanings[0]
-        webSql.saveWord(term, definitions)
+
+        saveWord(term, definitions)
 
         return definitions
       }

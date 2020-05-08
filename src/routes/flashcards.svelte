@@ -1,40 +1,22 @@
 <script>
   import { onMount } from 'svelte';
 
-  import WebSql from '../utils/web-sql'
+  import { getAllWords } from '../utils/local-storage'
 
-  let webSql = null
-  let definitions = []
+  let definitions = {}
   let flashcard
 
-  function getDefinitions(words) {
-    if (!words || !words.rows || !words.rows.length) {
-      return []
-    }
-    
-    const response = []
-    for (let i = 0; i < words.rows.length; i++) { 
-      const item = words.rows.item(i)
-      response.push({
-        word: item.word,
-        definition: JSON.parse(item.definition)
-      })
-    }
-
-    return response
-  }
-
   function setFlashCard() {
-    const randomIndex = Math.floor(Math.random() * definitions.length);
-    flashcard = definitions[randomIndex]
+    const words =  Object.keys(definitions)
+    const randomIndex = Math.floor(Math.random() * words.length);
+    flashcard = {
+      word: words[randomIndex],
+      definitions: definitions[words[randomIndex]]
+    }
   }
 
   onMount(async () => {
-    webSql = WebSql()
-
-    const words = await webSql.getAllWords()
-
-    definitions = getDefinitions(words)
+    definitions = getAllWords()
 
     setFlashCard()
   });
@@ -60,7 +42,7 @@
   {#if flashcard}
     <h1>{flashcard.word}</h1>
     <br />
-    {#each flashcard.definition as { definition, example }}
+    {#each flashcard.definitions as { definition, example }}
       {definition}
       <br /><br />
       {#if example}
