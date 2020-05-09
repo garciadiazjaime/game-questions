@@ -1,6 +1,5 @@
 const key = '@words'
 
-
 function saveWord(word, definition) {
   if (!word || !Array.isArray(definition) || !definition.length) {
     return
@@ -16,7 +15,7 @@ function saveWord(word, definition) {
 
 function getAllWords() {
   var data = JSON.parse(localStorage.getItem(key)) || {};
-  
+
   return data
 }
 

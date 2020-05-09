@@ -4,7 +4,7 @@
   import { getAllWords } from '../utils/local-storage'
 
   let definitions = {}
-  let flashcard
+  let flashcard = {}
 
   function setFlashCard() {
     const words =  Object.keys(definitions)
@@ -39,7 +39,7 @@
 </style>
 
 <section>
-  {#if flashcard}
+  {#if flashcard && flashcard.definitions}
     <h1>{flashcard.word}</h1>
     <br />
     {#each flashcard.definitions as { definition, example }}
@@ -50,7 +50,7 @@
         {example}
       {/if}
     {/each}
-  {/if}
 
-  <a href="/flashcards" on:click={setFlashCard}>Next</a>
+    <a href="/flashcards" on:click={setFlashCard}>Next</a>
+  {/if}
 </section>
