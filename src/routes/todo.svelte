@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
 
-  import { saveTodo, getTodos, deleteTodo } from '../utils/mint-service-client'
+  import { saveTodo, getTodos, deleteTodo, updateTodo } from '../utils/mint-service-client'
 
   let inputRef = null;
   let list = []
@@ -33,6 +33,16 @@
     if (event.keyCode === 13) {
       await addTodo()
     }
+  }
+
+  async function handleChange(id, state, todo) {
+    await updateTodo({
+      id,
+      state: !state,
+      todo
+    })
+
+    await updateTodoList()
   }
 
   async function removeTodo(id) {
@@ -96,7 +106,7 @@
     <ul>
     {#each list as { _id: id, todo, state }}
       <li>
-        <input type="checkbox" value={state}>
+        <input type="checkbox" checked={state} on:change={() => handleChange(id, state)}>
         <span>{todo}</span>
         <a href="/todo" on:click={() => removeTodo(id)}>X</a>
       </li>

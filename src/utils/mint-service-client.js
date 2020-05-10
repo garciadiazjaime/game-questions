@@ -105,10 +105,28 @@ function getTodos() {
   return fetchHandler(`process.env.API_URL/graphiql`, body)
 }
 
+function updateTodo(todo) {
+  if (!todo || !todo.id) {
+    return
+  }
+
+  const body = JSON.stringify({
+    query: `mutation Update($id: String!, $state: Boolean, $todo: String) {
+      updateTodo(id: $id, state: $state, todo: $todo) {
+        _id
+      }
+    }`,
+    variables: todo
+  })
+
+  return fetchHandler(`process.env.API_URL/graphiql`, body)  
+}
+
 export {
   saveWord,
   saveTodo,
   getWords,
   getTodos,
   deleteTodo,
+  updateTodo
 }
