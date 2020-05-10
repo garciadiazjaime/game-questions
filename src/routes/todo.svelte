@@ -3,6 +3,7 @@
 
   import { saveTodo, getTodos, deleteTodo, updateTodo } from '../utils/mint-service-client'
 
+  let selectedId = null
   let inputRef = null;
   let list = []
 
@@ -16,7 +17,15 @@
       return
     }
 
-    await saveTodo(todo)
+    if (selectedId) {
+      await updateTodo({
+        id: selectedId,
+        todo
+      })
+      selectedId = null
+    } else{
+      await saveTodo(todo)
+    }
 
     await updateTodoList()
 
@@ -49,6 +58,11 @@
     await deleteTodo(id)
 
     await updateTodoList()
+  }
+
+  async function handleClick(id, todo) {
+    selectedId = id
+    inputRef.value = todo
   }
 </script>
 
@@ -107,7 +121,7 @@
     {#each list as { _id: id, todo, state }}
       <li>
         <input type="checkbox" checked={state} on:change={() => handleChange(id, state)}>
-        <span>{todo}</span>
+        <span on:click={() => handleClick(id, todo)}>{todo}</span>
         <a href="/todo" on:click={() => removeTodo(id)}>X</a>
       </li>
     {/each}
