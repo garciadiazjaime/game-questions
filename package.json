@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "sapper dev",
     "build": "sapper build --legacy",
-    "export": "NODE_ENV=production sapper export --legacy",
+    "export": "NODE_ENV=production API_URL=http://api.mintitmedia.com sapper export --legacy",
     "start": "node __sapper__/build",
     "cy:run": "cypress run",
     "cy:open": "cypress open",

@@ -22,7 +22,8 @@ export default {
 			replace({
 				'process.browser': true,
 				'process.env.NODE_ENV': JSON.stringify(mode),
-				'process.env.DICTONARY_TOKEN': process.env.DICTONARY_TOKEN
+				'process.env.DICTONARY_TOKEN': process.env.DICTONARY_TOKEN,
+				'process.env.API_URL': process.env.API_URL
 			}),
 			svelte({
 				dev,
@@ -67,7 +68,8 @@ export default {
 			replace({
 				'process.browser': false,
 				'process.env.NODE_ENV': JSON.stringify(mode),
-				'process.env.DICTONARY_TOKEN': ''
+				'process.env.DICTONARY_TOKEN': '',
+				'process.env.API_URL': process.env.API_URL
 			}),
 			svelte({
 				generate: 'ssr',

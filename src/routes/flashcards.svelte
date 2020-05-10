@@ -1,22 +1,20 @@
 <script>
   import { onMount } from 'svelte';
 
-  import { getAllWords } from '../utils/local-storage'
+  import { getAllWords } from '../utils/mint-service-client'
 
-  let definitions = {}
+  let definitions = []
   let flashcard = {}
 
   function setFlashCard() {
-    const words =  Object.keys(definitions)
-    const randomIndex = Math.floor(Math.random() * words.length);
-    flashcard = {
-      word: words[randomIndex],
-      definitions: definitions[words[randomIndex]]
-    }
+    const randomIndex = Math.floor(Math.random() * definitions.length);
+    flashcard = definitions[randomIndex]
   }
 
   onMount(async () => {
-    definitions = getAllWords()
+    const response = await getAllWords()
+
+    definitions = (response && response.data && response.data.words) || []
 
     setFlashCard()
   });
@@ -39,8 +37,8 @@
 </style>
 
 <section>
-  {#if flashcard && flashcard.definitions}
-    <h1>{flashcard.word}</h1>
+  {#if flashcard && flashcard.term}
+    <h1>{flashcard.term}</h1>
     <br />
     {#each flashcard.definitions as { definition, example }}
       {definition}

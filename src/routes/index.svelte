@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
 
   import { search } from '../utils/dictionary'
-  import { saveWord } from '../utils/local-storage'
+  import { saveWord } from '../utils/mint-service-client'
 
   let definitions = ''
   let inputRef = null;
@@ -20,8 +20,6 @@
       if (Array.isArray(meanings) && meanings.length) {
         const { definitions} = meanings[0]
 
-        saveWord(term, definitions)
-
         return definitions
       }
     }
@@ -37,6 +35,8 @@
       const response = await search(term)
 
       definitions = getDefinitions(response).slice(0, 3)
+
+      await saveWord(term, definitions)
     }
   }
 
