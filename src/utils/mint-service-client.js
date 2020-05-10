@@ -37,7 +37,7 @@ function saveWord(term, data) {
   return fetchHandler(`process.env.API_URL/word/graphiql`, body)
 }
 
-async function getAllWords() {
+async function getWords() {
   const body = JSON.stringify({
     query: `{
       words{
@@ -53,7 +53,62 @@ async function getAllWords() {
   return fetchHandler(`process.env.API_URL/word/graphiql`, body)
 }
 
+function saveTodo(todo) {
+  if (!todo) {
+    return
+  }
+
+  const body = JSON.stringify({
+    query: `mutation Add($todo: String!) {
+      addTodo(todo: $todo) {
+        _id
+      }
+    }`,
+    variables: {
+      todo,
+    }
+  })
+
+  return fetchHandler(`process.env.API_URL/graphiql`, body)  
+}
+
+function deleteTodo(id) {
+  if (!id) {
+    return
+  }
+
+  const body = JSON.stringify({
+    query: `mutation Delete($id: String!) {
+      deleteTodo(id: $id) {
+        _id
+      }
+    }`,
+    variables: {
+      id,
+    }
+  })
+
+  return fetchHandler(`process.env.API_URL/graphiql`, body)  
+}
+
+function getTodos() {
+  const body = JSON.stringify({
+    query: `{
+      todo {
+        _id
+        todo
+        state
+      }
+    }`,
+  })
+
+  return fetchHandler(`process.env.API_URL/graphiql`, body)
+}
+
 export {
   saveWord,
-  getAllWords
+  saveTodo,
+  getWords,
+  getTodos,
+  deleteTodo,
 }

@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
 
-  import { getAllWords } from '../utils/mint-service-client'
+  import { getWords } from '../utils/mint-service-client'
 
   let definitions = []
   let flashcard = {}
@@ -12,7 +12,7 @@
   }
 
   onMount(async () => {
-    const response = await getAllWords()
+    const response = await getWords()
 
     definitions = (response && response.data && response.data.words) || []
 
