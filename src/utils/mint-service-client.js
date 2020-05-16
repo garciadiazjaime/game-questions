@@ -53,19 +53,19 @@ async function getWords() {
   return fetchHandler(`process.env.API_URL/word/graphiql`, body)
 }
 
-function saveTodo(todo) {
-  if (!todo) {
+function saveTodos(todos) {
+  if (!Array.isArray(todos) || !todos.length) {
     return
   }
 
   const body = JSON.stringify({
-    query: `mutation Add($todo: String!) {
-      addTodo(todo: $todo) {
-        _id
+    query: `mutation Add($todos: [String]!) {
+      addTodos(todos: $todos) {
+        state
       }
     }`,
     variables: {
-      todo,
+      todos,
     }
   })
 
@@ -106,13 +106,13 @@ function getTodos() {
 }
 
 function updateTodo(todo) {
-  if (!todo || !todo.id) {
+  if (!todo || !todo._id) {
     return
   }
 
   const body = JSON.stringify({
-    query: `mutation Update($id: String!, $state: Boolean, $todo: String) {
-      updateTodo(id: $id, state: $state, todo: $todo) {
+    query: `mutation Update($_id: String!, $state: Boolean, $todo: String) {
+      updateTodo(_id: $_id, state: $state, todo: $todo) {
         _id
       }
     }`,
@@ -124,7 +124,7 @@ function updateTodo(todo) {
 
 export {
   saveWord,
-  saveTodo,
+  saveTodos,
   getWords,
   getTodos,
   deleteTodo,

@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
 
-  import { saveTodo, getTodos, deleteTodo, updateTodo } from '../utils/mint-service-client'
+  import { saveTodos, getTodos, deleteTodo, updateTodo } from '../utils/mint-service-client'
 
   let selectedId = null
   let inputRef = null;
@@ -11,25 +11,30 @@
     await updateTodoList()
 	});
 
-  async function addTodo() {
-    const todo = inputRef.value
-    if (!todo) {
-      return
-    }
-
+  async function addTodos(data) {
     if (selectedId) {
-      await updateTodo({
-        id: selectedId,
-        todo
-      })
+      await handleChange(selectedId, null, data)
       selectedId = null
-    } else{
-      await saveTodo(todo)
+    } else {
+      const items = data.split('\n').reduce((accu, item) => {
+        const value = item.trim()
+        if (value && value.length) {
+          accu.push(value)
+        }
+
+        return accu
+      }, [])
+
+      if (!items.length) {
+        return
+      }
+      
+      await saveTodos(items)
+
+      await updateTodoList()
+
+      inputRef.value = ''
     }
-
-    await updateTodoList()
-
-    inputRef.value = ''
   }
 
   async function updateTodoList() {
@@ -40,29 +45,31 @@
 
   async function handleKeyDown(event) {
     if (event.keyCode === 13) {
-      await addTodo()
+      await addTodos(event.target.value)
     }
   }
 
-  async function handleChange(id, state, todo) {
-    await updateTodo({
-      id,
-      state: !state,
-      todo
-    })
+  async function handleChange(id) {
+    const item = list.find(item => item._id === id)
 
-    await updateTodoList()
+    await updateTodo(item)
   }
 
   async function removeTodo(id) {
+    selectedId = null
+
     await deleteTodo(id)
 
     await updateTodoList()
   }
 
-  async function handleClick(id, todo) {
-    selectedId = id
-    inputRef.value = todo
+  async function handleClick(id) {
+    if (selectedId) {
+      handleChange(selectedId)
+      selectedId = null
+    } else {
+      selectedId = id
+    }
   }
 </script>
 
@@ -73,9 +80,8 @@
   }
 
   input[type=text] {
-    padding: 6px;
+    padding: 4px;
     font-size: 30px;
-    margin-bottom: 12px;
   }
 
   input[type=checkbox] {
@@ -114,15 +120,19 @@
 </style>
 
 <section>
-  <input type="text" name="todo" on:keydown={handleKeyDown} bind:this={inputRef} on:focusout={addTodo} />
+  <input type="text" name="todo" on:keydown={handleKeyDown} bind:this={inputRef} />
 
   {#if list }
     <ul>
-    {#each list as { _id: id, todo, state }}
+    {#each list as { _id, todo, state }}
       <li>
-        <input type="checkbox" checked={state} on:change={() => handleChange(id, state)}>
-        <span on:click={() => handleClick(id, todo)}>{todo}</span>
-        <a href="/todo" on:click={() => removeTodo(id)}>X</a>
+        {#if _id === selectedId }
+          <input type="text" bind:value={todo} on:keydown={handleKeyDown} />
+        {:else }
+          <input type="checkbox" bind:checked={state} on:change={() => handleChange(_id)}>
+          <span on:click={() => handleClick(_id)}>{todo}</span>
+          <a href="/todo" on:click={() => removeTodo(_id)}>X</a>
+        {/if}
       </li>
     {/each}
     </ul>
