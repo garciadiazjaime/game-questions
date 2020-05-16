@@ -79,7 +79,7 @@
     flex-direction: column;
   }
 
-  input[type=text] {
+  textarea, input[type=text] {
     padding: 4px;
     font-size: 30px;
   }
@@ -119,8 +119,9 @@
   }
 </style>
 
+
 <section>
-  <input type="text" name="todo" on:keydown={handleKeyDown} bind:this={inputRef} />
+  <textarea name="todo" on:keydown={handleKeyDown} bind:this={inputRef}></textarea>
 
   {#if list }
     <ul>
