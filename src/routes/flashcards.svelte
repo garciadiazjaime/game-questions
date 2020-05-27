@@ -47,6 +47,7 @@
     background-color: antiquewhite;
     border-radius: 6px;
     padding: 12px;
+    min-height: 300px;
   }
 
   .flashcard:hover {
