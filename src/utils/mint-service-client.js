@@ -40,7 +40,7 @@ function saveWord(term, data) {
 async function getWords() {
   const body = JSON.stringify({
     query: `{
-      words{
+      words(first:100){
         term
         definitions {
           definition
