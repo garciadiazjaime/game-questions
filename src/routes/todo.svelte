@@ -49,6 +49,10 @@
     }
   }
 
+  async function handleAddClick(event) {
+    await addTodos(inputRef.value)
+  }
+
   async function handleChange(id) {
     const item = list.find(item => item._id === id)
 
@@ -84,6 +88,12 @@
     font-size: 30px;
   }
 
+  textarea.container {
+    padding: 4px;
+    font-size: 20px;
+    min-height: 200px;
+  }
+
   input[type=checkbox] {
     height: 40px;
     width: 40px;
@@ -117,12 +127,25 @@
     padding: 6px 12px;
     border: 1px solid;
   }
+
+  div {
+    display: inline-block;
+    padding: 6px;
+    border: 1px solid #ff3e00;
+    font-size: 20px;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 12px 0 0;
+  }
+  div:hover {
+    cursor: pointer;
+  }
 </style>
 
 
 <section>
-  <textarea name="todo" on:keydown={handleKeyDown} bind:this={inputRef}></textarea>
-
+  <textarea name="todo" bind:this={inputRef} class="container"></textarea>
+  <div on:click={handleAddClick}>Add</div>
   {#if list }
     <ul>
     {#each list as { _id, todo, state }}
