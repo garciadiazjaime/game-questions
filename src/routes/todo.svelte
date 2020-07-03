@@ -16,10 +16,13 @@
       await handleChange(selectedId, null, data)
       selectedId = null
     } else {
-      const items = data.split('\n').reduce((accu, item) => {
-        const value = item.trim()
-        if (value && value.length) {
-          accu.push(value)
+      const items = data.split('\n').reduce((accu, item, position) => {
+        const todo = item.trim()
+        if (todo && todo.length) {
+          accu.push({
+            todo,
+            position
+          })
         }
 
         return accu

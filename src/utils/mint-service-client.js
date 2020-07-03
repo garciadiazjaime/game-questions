@@ -59,7 +59,7 @@ function saveTodos(todos) {
   }
 
   const body = JSON.stringify({
-    query: `mutation Add($todos: [String]!) {
+    query: `mutation Add($todos: [TodoInput]!) {
       addTodos(todos: $todos) {
         state
       }
