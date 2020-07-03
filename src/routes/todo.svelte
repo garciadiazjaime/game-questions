@@ -60,6 +60,8 @@
     const item = list.find(item => item._id === id)
 
     await updateTodo(item)
+
+    list = list.sort((a, b) => a.state - b.state)
   }
 
   async function removeTodo(id) {
