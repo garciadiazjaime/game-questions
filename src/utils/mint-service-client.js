@@ -12,7 +12,7 @@ async function fetchHandler(url, body) {
   return response.json()
 }
 
-function saveWord(term, data) {
+function saveWord(term, data, lang) {
   if (!term || !Array.isArray(data) || !data.length) {
     return
   }
@@ -23,14 +23,15 @@ function saveWord(term, data) {
   }))
 
   const body = JSON.stringify({
-    query: `mutation Add($term: String!, $definitions: [DefinitionInput]!) {
-      add(term: $term, definitions: $definitions) {
+    query: `mutation Add($term: String!, $definitions: [DefinitionInput]!, $lang: String!) {
+      add(term: $term, definitions: $definitions, lang: $lang) {
         _id
       }
     }`,
     variables: {
       definitions,
-      term
+      term,
+      lang
     }
   })
 

@@ -27,11 +27,32 @@
 </script>
 
 <style>
+  .container {
+    background-color: antiquewhite;
+    border-radius: 6px;
+    padding: 12px;
+    height: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    align-content: center;
+    min-height: 360px;
+  }
+
+  .container:hover {
+    cursor: pointer;
+  }
+
   h1 {
     text-transform: capitalize;
-    margin: 0px;
+    margin: auto 0;
     text-align: center;
-    margin: 12px 0;
+    flex: 1;
+  }
+
+  .cta-wrapper {
+    position: fixed;
+    width: calc(100% - 24px);
+    bottom: 12px;
   }
 
   a {
@@ -42,37 +63,29 @@
     border: 1px solid #ff3e00;
     text-decoration: none;
   }
-
-  .flashcard {
-    background-color: antiquewhite;
-    border-radius: 6px;
-    padding: 12px;
-    min-height: 300px;
-  }
-
-  .flashcard:hover {
-    cursor: pointer;
-  }
 </style>
 
 <section>
   {#if flashcard && flashcard.term}
-    <div class="flashcard" on:click={handleClick}>
-      <h1>{flashcard.term}</h1>
-
-      {#if showDefinition}
-        {#each flashcard.definitions as { definition, example }}
-          {definition}
-          <br /><br />
-          {#if example}
-            <b>Ejemplo:</b>
-            {example}
-          {/if}
-        {/each}
+    <div class="container" on:click={handleClick}>
+      {#if !showDefinition }
+        <h1>{flashcard.term}</h1>
+      {:else }
+        <div class="definition">
+          {#each flashcard.definitions as { definition, example }}
+            {definition}
+            <br /><br />
+            {#if example}
+              <b>Ejemplo:</b>
+              {example}
+            {/if}
+          {/each}
+        </div>
       {/if}
     </div>
 
-    <br />
-    <a href="/flashcards" on:click={setFlashCard}>Next</a>
+    <div class="cta-wrapper">
+      <a href="/flashcards" on:click={setFlashCard}>Next</a>
+    </div>
   {/if}
 </section>

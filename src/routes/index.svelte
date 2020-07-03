@@ -8,6 +8,7 @@
   let inputRef = null;
   let term = ''
   let webSql = null
+  let lang = 'es';
 
   onMount(() => {
     inputRef.focus()
@@ -32,11 +33,11 @@
     definitions = []
 
     if (term) {
-      const response = await search(term)
+      const response = await search(term, lang)
 
       definitions = getDefinitions(response).slice(0, 3)
 
-      await saveWord(term, definitions)
+      await saveWord(term, definitions, lang)
     }
   }
 
@@ -78,10 +79,30 @@
     padding: 12px 0;
     border-bottom: 1px solid #333;
   }
+
+  .lang {
+    font-size: 40px;
+  }
+
+  .lang input {
+    width: 42px;
+    height: 2em;
+  }
 </style>
 
 <section>
-  <input type="text" name="term" on:keydown={handleKeyDown} bind:this={inputRef} on:focusout={searchTerm} />
+  <div class="lang">
+    <label>
+      <input type=radio bind:group={lang} value={'es'}>
+      ES
+    </label>
+    <label>
+      <input type=radio bind:group={lang} value={'en'}>
+        EN
+    </label>
+  </div>
+
+  <input type="text" name="term" on:keydown={handleKeyDown} bind:this={inputRef} />
 
   <div>
     {#if term}
