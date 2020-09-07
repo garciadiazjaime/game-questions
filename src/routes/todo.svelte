@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
 
-  import { saveTodos, getTodos, deleteTodo, updateTodo } from '../utils/mint-service-client'
+  import { saveTodos, getTodos, deleteTodo, updateTodo, deleteTodos } from '../utils/mint-service-client'
 
   let selectedId = null
   let inputRef = null;
@@ -54,6 +54,14 @@
 
   async function handleAddClick(event) {
     await addTodos(inputRef.value)
+  }
+
+  async function handleRemoveAllClick() {
+    if (confirm('are you sure?')) {
+      await deleteTodos()
+
+      list = []
+    }
   }
 
   async function handleChange(id) {
@@ -145,13 +153,18 @@
   div:hover {
     cursor: pointer;
   }
+
+  .invert {
+    border: 1px solid #CCC;
+    opacity: 0.8;
+  }
 </style>
 
 
 <section>
   <textarea name="todo" bind:this={inputRef} class="container"></textarea>
   <div on:click={handleAddClick}>Add</div>
-  {#if list }
+  {#if list.length }
     <ul>
     {#each list as { _id, todo, state }}
       <li>
@@ -165,5 +178,7 @@
       </li>
     {/each}
     </ul>
+
+    <div on:click={handleRemoveAllClick} class="invert">Remove All</div>
   {/if}
 </section>

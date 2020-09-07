@@ -92,6 +92,16 @@ function deleteTodo(id) {
   return fetchHandler(`process.env.API_URL/graphiql`, body)  
 }
 
+function deleteTodos() {
+  const body = JSON.stringify({
+    query: `mutation DeleteTodos{
+      deleteTodos
+    }`,
+  })
+
+  return fetchHandler(`process.env.API_URL/graphiql`, body)  
+}
+
 function getTodos() {
   const body = JSON.stringify({
     query: `{
@@ -129,5 +139,6 @@ export {
   getWords,
   getTodos,
   deleteTodo,
+  deleteTodos,
   updateTodo
 }
