@@ -66,10 +66,12 @@
     }
   }
 
-  function handleClickReset() {
+  async function handleClickReset() {
     inputRef.value = ''
     list.forEach(item => (inputRef.value += `${item.todo}\n`))
     list = []
+
+    await deleteTodos()
   }
 
   async function handleChange(id) {
