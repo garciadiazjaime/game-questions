@@ -56,12 +56,19 @@
     await addTodos(inputRef.value)
   }
 
-  async function handleRemoveAllClick() {
+  async function handleClickClean() {
     if (confirm('are you sure?')) {
+      inputRef.value = ''
+
       await deleteTodos()
 
       list = []
     }
+  }
+
+  function handleClickReset() {
+    inputRef.value = ''
+    list.forEach(item => (inputRef.value += `${item.todo}\n`))
   }
 
   async function handleChange(id) {
@@ -158,6 +165,10 @@
     border: 1px solid #CCC;
     opacity: 0.8;
   }
+  .clean {
+    border: 1px solid #CCC;
+    opacity: 0.5;
+  }
 </style>
 
 
@@ -179,6 +190,7 @@
     {/each}
     </ul>
 
-    <div on:click={handleRemoveAllClick} class="invert">Remove All</div>
+    <div on:click={handleClickReset} class="invert">Reset</div>
+    <div on:click={handleClickClean} class="clean">Clean</div>
   {/if}
 </section>
