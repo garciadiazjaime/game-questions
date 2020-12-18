@@ -69,6 +69,7 @@
   function handleClickReset() {
     inputRef.value = ''
     list.forEach(item => (inputRef.value += `${item.todo}\n`))
+    list = []
   }
 
   async function handleChange(id) {
