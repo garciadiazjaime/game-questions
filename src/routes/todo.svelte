@@ -1,7 +1,8 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
 
   import { saveTodos, getTodos, deleteTodo, updateTodo, deleteTodos } from '../utils/mint-service-client'
+  import { saveDraft, setDraft } from "../utils/draft"
 
   let selectedId = null
   let inputRef = null;
@@ -9,6 +10,11 @@
 
   onMount(async () => {
     await updateTodoList()
+    setDraft(inputRef)
+	});
+
+  onDestroy(() => {
+    saveDraft(inputRef)
 	});
 
   async function addTodos(data) {
