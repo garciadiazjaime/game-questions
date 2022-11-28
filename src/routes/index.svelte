@@ -115,24 +115,30 @@
   input[type="text"] {
     padding: 6px;
     font-size: 30px;
-    margin-bottom: 12px;
     display: block;
     width: 100%;
+    height: 100%;
     box-sizing: border-box;
   }
 
   .control {
     position: relative;
+    margin-bottom: 12px;
+    height: 52px;
   }
 
   .clear {
-    border: 1px solid #000;
-    text-align: center;
     position: absolute;
     top: 0;
     right: 0px;
-    padding: 6px 16px;
+    padding: 0px 16px;
     color: #999;
+    height: 100%;
+    box-sizing: border-box;
+    font-size: 40px;
+    display: flex;
+    justify-items: center;
+    align-items: center;
   }
 
   div {
