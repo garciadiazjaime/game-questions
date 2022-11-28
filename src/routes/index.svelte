@@ -7,7 +7,7 @@
   let definitions = "";
   let inputRef = null;
   let term = "";
-  let lang = "en";
+  let lang = "es";
   let loading = false;
 
   onMount(() => {
@@ -20,6 +20,10 @@
     }
 
     return data.reduce((accu, item) => {
+      if (!item.shortdef) {
+        return accu
+      }
+
       accu.push(...item.shortdef);
 
       return accu;
@@ -38,7 +42,8 @@
       return;
     }
 
-    definitions = getDefinitions(response).slice(0, 3);
+    const limitDefinitions = 10
+    definitions = getDefinitions(response).slice(0, limitDefinitions);
 
     loading = false;
   }

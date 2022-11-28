@@ -1,11 +1,24 @@
-export const search = async (term) => {
+const dictionaries = {
+  en: {
+    ref: 'collegiate',
+    key: 'process.env.EN_DICTONARY_TOKEN'
+  },
+  es: {
+    ref: 'spanish',
+    key: 'process.env.ES_DICTONARY_TOKEN'
+  }
+}
+
+export const search = async (term, lang) => {
   if (!term) {
     return;
   }
 
-  const url = `https://dictionaryapi.com/api/v3/references/collegiate/json/${encodeURIComponent(
+  const { ref, key } = dictionaries[lang]
+
+  const url = `https://dictionaryapi.com/api/v3/references/${ref}/json/${encodeURIComponent(
     term
-  )}?key=process.env.DICTONARY_TOKEN`;
+  )}?key=${key}`;
 
   const response = await fetch(url);
 
