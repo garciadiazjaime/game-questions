@@ -88,7 +88,9 @@
       on:keydown={handleKeyDown}
       bind:this={inputRef}
     />
-    <div class="clear" on:click={clearHandler}>X</div>
+    {#if inputRef && inputRef.value}
+      <div class="clear" on:click={clearHandler}></div>
+    {/if}
   </div>
 
   <div class={loading ? "loader" : ""} />
@@ -112,6 +114,12 @@
     flex-direction: column;
   }
 
+  .control {
+    position: relative;
+    margin-bottom: 12px;
+    height: 52px;
+  }
+
   input[type="text"] {
     padding: 6px;
     font-size: 30px;
@@ -121,24 +129,26 @@
     box-sizing: border-box;
   }
 
-  .control {
-    position: relative;
-    margin-bottom: 12px;
-    height: 52px;
-  }
-
   .clear {
     position: absolute;
     top: 0;
-    right: 0px;
-    padding: 0px 16px;
-    color: #999;
+    right: 0;
     height: 100%;
+    width: 50px;
     box-sizing: border-box;
-    font-size: 40px;
-    display: flex;
-    justify-items: center;
-    align-items: center;
+  }
+
+  .clear:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    content: "\D7";
+    font-size: 50px; 
+    color: #999;
+    line-height: 45px;
+    text-align: center;
   }
 
   div {
