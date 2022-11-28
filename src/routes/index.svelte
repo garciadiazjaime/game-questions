@@ -21,7 +21,7 @@
 
     return data.reduce((accu, item) => {
       if (!item.shortdef) {
-        return accu
+        return accu;
       }
 
       accu.push(...item.shortdef);
@@ -42,7 +42,7 @@
       return;
     }
 
-    const limitDefinitions = 10
+    const limitDefinitions = 10;
     definitions = getDefinitions(response).slice(0, limitDefinitions);
 
     loading = false;
@@ -63,9 +63,9 @@
   }
 
   function clearHandler() {
-    inputRef.value = ''
-    definitions = []
-    inputRef.focus()
+    inputRef.value = "";
+    definitions = [];
+    inputRef.focus();
   }
 </script>
 
@@ -83,14 +83,12 @@
 
   <div class="control">
     <input
-    type="text"
-    name="term"
-    on:keydown={handleKeyDown}
-    bind:this={inputRef}
+      type="text"
+      name="term"
+      on:keydown={handleKeyDown}
+      bind:this={inputRef}
     />
-    <div class="clear" on:click={clearHandler}>
-      X
-    </div>
+    <div class="clear" on:click={clearHandler}>X</div>
   </div>
 
   <div class={loading ? "loader" : ""} />
