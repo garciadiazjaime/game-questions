@@ -61,6 +61,12 @@
 
     await saveWord(term, definitions, lang);
   }
+
+  function clearHandler() {
+    inputRef.value = ''
+    definitions = []
+    inputRef.focus()
+  }
 </script>
 
 <section>
@@ -75,19 +81,21 @@
     </label>
   </div>
 
-  <input
+  <div class="control">
+    <input
     type="text"
     name="term"
     on:keydown={handleKeyDown}
     bind:this={inputRef}
-  />
+    />
+    <div class="clear" on:click={clearHandler}>
+      X
+    </div>
+  </div>
 
   <div class={loading ? "loader" : ""} />
 
   <div>
-    {#if term}
-      <h1>{term}</h1>
-    {/if}
     {#if definitions}
       <ul>
         {#each definitions as definition}
@@ -98,8 +106,6 @@
       </ul>
     {/if}
   </div>
-
-  <a href="/" on:click={saveHandler}>Save</a>
 </section>
 
 <style>
@@ -112,15 +118,27 @@
     padding: 6px;
     font-size: 30px;
     margin-bottom: 12px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  h1 {
-    text-transform: capitalize;
-    margin: 0px;
+  .control {
+    position: relative;
+  }
+
+  .clear {
+    border: 1px solid #000;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    right: 0px;
+    padding: 6px 16px;
+    color: #999;
   }
 
   div {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   ul {
@@ -131,7 +149,7 @@
 
   li {
     padding: 12px 0;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #ccc;
   }
 
   .lang {
