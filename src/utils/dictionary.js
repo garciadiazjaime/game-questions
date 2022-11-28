@@ -1,20 +1,13 @@
-import stubData from '../../stubs/dictonary'
-
-async function search(term, lang) {
+export const search = async (term) => {
   if (!term) {
-    return ''
+    return;
   }
 
-  if (process.env.NODE_ENV !== 'production') {
-    return stubData
-  }
+  const url = `https://dictionaryapi.com/api/v3/references/collegiate/json/${encodeURIComponent(
+    term
+  )}?key=process.env.DICTONARY_TOKEN`;
 
-  const url = `https://api.dictionaryapi.dev/api/v2/entries/${lang}/${term}?key=process.env.DICTONARY_TOKEN`
-  const response = await fetch(url)
+  const response = await fetch(url);
 
-  return await response.json()
-}
-
-export {
-  search
-}
+  return response.json();
+};

@@ -1,52 +1,101 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount } from "svelte";
 
-  import { search } from '../utils/dictionary'
-  import { saveWord } from '../utils/mint-service-client'
+  import { search } from "../utils/dictionary";
+  import { saveWord } from "../utils/mint-service-client";
 
-  let definitions = ''
+  let definitions = "";
   let inputRef = null;
-  let term = ''
-  let webSql = null
-  let lang = 'es';
+  let term = "";
+  let lang = "en";
+  let loading = false;
 
   onMount(() => {
-    inputRef.focus()
-	});
+    inputRef.focus();
+  });
 
   function getDefinitions(data) {
-    if (Array.isArray(data) && data.length) {
-      const { meanings } = data[0]
-
-      if (Array.isArray(meanings) && meanings.length) {
-        const { definitions} = meanings[0]
-
-        return definitions
-      }
+    if (!Array.isArray(data) || !data.length) {
+      return [];
     }
 
-    return []
+    return data.reduce((accu, item) => {
+      accu.push(...item.shortdef);
+
+      return accu;
+    }, []);
   }
 
   async function searchTerm() {
-    term = inputRef.value
-    definitions = []
+    loading = true;
 
-    if (term) {
-      const response = await search(term, lang)
+    term = inputRef.value;
+    definitions = [];
 
-      definitions = getDefinitions(response).slice(0, 3)
+    const response = await search(term, lang);
 
-      await saveWord(term, definitions, lang)
+    if (!response) {
+      return;
     }
+
+    definitions = getDefinitions(response).slice(0, 3);
+
+    loading = false;
   }
 
   async function handleKeyDown(event) {
     if (event.keyCode === 13) {
-      await searchTerm()
+      await searchTerm();
     }
   }
+
+  async function saveHandler() {
+    if (!Array.isArray(definitions) || !definitions.length) {
+      return;
+    }
+
+    await saveWord(term, definitions, lang);
+  }
 </script>
+
+<section>
+  <div class="lang">
+    <label>
+      <input type="radio" bind:group={lang} value={"es"} />
+      ES
+    </label>
+    <label>
+      <input type="radio" bind:group={lang} value={"en"} />
+      EN
+    </label>
+  </div>
+
+  <input
+    type="text"
+    name="term"
+    on:keydown={handleKeyDown}
+    bind:this={inputRef}
+  />
+
+  <div class={loading ? "loader" : ""} />
+
+  <div>
+    {#if term}
+      <h1>{term}</h1>
+    {/if}
+    {#if definitions}
+      <ul>
+        {#each definitions as definition}
+          <li>
+            {definition}
+          </li>
+        {/each}
+      </ul>
+    {/if}
+  </div>
+
+  <a href="/" on:click={saveHandler}>Save</a>
+</section>
 
 <style>
   section {
@@ -54,7 +103,7 @@
     flex-direction: column;
   }
 
-  input[type=text] {
+  input[type="text"] {
     padding: 6px;
     font-size: 30px;
     margin-bottom: 12px;
@@ -88,39 +137,22 @@
     width: 42px;
     height: 2em;
   }
+
+  .loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 </style>
-
-<section>
-  <div class="lang">
-    <label>
-      <input type=radio bind:group={lang} value={'es'}>
-      ES
-    </label>
-    <label>
-      <input type=radio bind:group={lang} value={'en'}>
-        EN
-    </label>
-  </div>
-
-  <input type="text" name="term" on:keydown={handleKeyDown} bind:this={inputRef} />
-
-  <div>
-    {#if term}
-      <h1>{term}</h1>
-    {/if}
-    {#if definitions}
-      <ul>
-        {#each definitions as { definition, example }}
-          <li>
-            {definition}
-            <br /><br />
-            {#if example}
-              <b>Ejemplo:</b>
-              {example}
-            {/if}
-          </li>
-        {/each}
-      </ul>
-    {/if}
-  </div>
-</section>
