@@ -15,6 +15,7 @@
     "deploy": "npm run google:clean && npm run google:upload"
   },
   "dependencies": {
+    "aws-sdk": "^2.1262.0",
     "compression": "^1.7.1",
     "dotenv": "^16.0.3",
     "node-fetch": "^2.6.7",

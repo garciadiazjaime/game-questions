@@ -11,15 +11,15 @@ const dictionaries = {
   },
 };
 
-module.exports.search = async (term, lang) => {
-  if (!term) {
+module.exports.search = (word, lang) => {
+  if (!word) {
     return;
   }
 
   const { ref, key } = dictionaries[lang];
 
   const url = `https://dictionaryapi.com/api/v3/references/${ref}/json/${encodeURIComponent(
-    term
+    word
   )}?key=${key}`;
 
   return fetch(url);

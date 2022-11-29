@@ -1,8 +1,7 @@
 <script>
   import { onMount } from "svelte";
 
-  import { search } from "../support/lambda-service";
-  import { saveWord } from "../support/mint-service-client";
+  import { searchWord, saveWord } from "../support/lambda-service";
 
   let definitions = "";
   let inputRef = null;
@@ -38,7 +37,7 @@
     term = inputRef.value;
     definitions = [];
 
-    const response = await search(term, lang)
+    const response = await searchWord(term, lang)
       .then((resp) => resp.json())
       .catch(() => {});
 
@@ -51,20 +50,19 @@
 
     const limitDefinitions = 10;
     definitions = getDefinitions(response).slice(0, limitDefinitions);
+
+    if (!definitions.length) {
+      showNoResults = true;
+      return
+    }
+
+    saveWord(term, lang, definitions)
   }
 
   async function handleKeyDown(event) {
     if (event.keyCode === 13) {
       await searchTerm();
     }
-  }
-
-  async function saveHandler() {
-    if (!Array.isArray(definitions) || !definitions.length) {
-      return;
-    }
-
-    await saveWord(term, definitions, lang);
   }
 
   function clearHandler() {
