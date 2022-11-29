@@ -1,8 +1,8 @@
 <script>
   import { onMount } from "svelte";
 
-  import { search } from "../utils/dictionary";
-  import { saveWord } from "../utils/mint-service-client";
+  import { search } from "../support/lambda-service";
+  import { saveWord } from "../support/mint-service-client";
 
   let definitions = "";
   let inputRef = null;
@@ -39,7 +39,7 @@
     definitions = [];
 
     const response = await search(term, lang)
-      .then((resp) => resp)
+      .then((resp) => resp.json())
       .catch(() => {});
 
     loading = false;

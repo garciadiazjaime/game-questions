@@ -1,8 +1,8 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
 
-  import { saveTodos, getTodos, deleteTodo, updateTodo, deleteTodos } from '../utils/mint-service-client'
-  import { saveDraft, setDraft } from "../utils/draft"
+  import { saveTodos, getTodos, deleteTodo, updateTodo, deleteTodos } from '../support/mint-service-client'
+  import { saveDraft, setDraft } from "../support/draft"
 
   let selectedId = null
   let inputRef = null;

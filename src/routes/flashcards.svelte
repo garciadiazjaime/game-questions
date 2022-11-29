@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
 
-  import { getWords } from '../utils/mint-service-client'
+  import { getWords } from '../support/mint-service-client'
 
   let definitions = []
   let flashcard = {}
