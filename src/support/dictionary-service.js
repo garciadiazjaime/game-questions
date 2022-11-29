@@ -22,7 +22,5 @@ module.exports.search = async (term, lang) => {
     term
   )}?key=${key}`;
 
-  const response = await fetch(url);
-
-  return response.json();
+  return fetch(url);
 };
