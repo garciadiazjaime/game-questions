@@ -9,6 +9,7 @@
   let term = "";
   let lang = "es";
   let loading = false;
+  let showNoResults = false;
 
   onMount(() => {
     inputRef.focus();
@@ -32,20 +33,24 @@
 
   async function searchTerm() {
     loading = true;
+    showNoResults = false;
 
     term = inputRef.value;
     definitions = [];
 
-    const response = await search(term, lang);
+    const response = await search(term, lang)
+      .then((resp) => resp)
+      .catch(() => {});
+
+    loading = false;
 
     if (!response) {
+      showNoResults = true;
       return;
     }
 
     const limitDefinitions = 10;
     definitions = getDefinitions(response).slice(0, limitDefinitions);
-
-    loading = false;
   }
 
   async function handleKeyDown(event) {
@@ -65,6 +70,7 @@
   function clearHandler() {
     inputRef.value = "";
     definitions = [];
+    showNoResults = false;
     inputRef.focus();
   }
 </script>
@@ -89,7 +95,7 @@
       bind:this={inputRef}
     />
     {#if inputRef && inputRef.value}
-      <div class="clear" on:click={clearHandler}></div>
+      <div class="clear" on:click={clearHandler} />
     {/if}
   </div>
 
@@ -106,6 +112,9 @@
       </ul>
     {/if}
   </div>
+  {#if showNoResults}
+    <div>No results found</div>
+  {/if}
 </section>
 
 <style>
@@ -145,7 +154,7 @@
     left: 0;
     right: 0;
     content: "\D7";
-    font-size: 50px; 
+    font-size: 50px;
     color: #999;
     line-height: 45px;
     text-align: center;

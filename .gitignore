@@ -5,3 +5,7 @@ yarn-error.log
 /cypress/screenshots/
 /__sapper__/
 secrets.txt
+
+# Local Netlify folder
+.netlify
+.env
