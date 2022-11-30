@@ -44,7 +44,7 @@
         <div class="definition">
           {#each flashcard.meaning as meaning}
             {meaning}
-            <br />
+            <br /><br />
           {/each}
         </div>
       {/if}
