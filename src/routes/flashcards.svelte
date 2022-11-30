@@ -12,7 +12,7 @@
     const item = definitions[randomIndex];
     try {
       flashcard = {
-        word: item.word,
+        word: item.word.split('_')[0],
         meaning: JSON.parse(item.meaning),
       };
     } catch (error) {
