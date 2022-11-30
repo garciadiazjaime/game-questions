@@ -1,30 +1,60 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount } from "svelte";
 
-  import { getWords } from '../support/mint-service-client'
+  import { getWords } from "../support/lambda-service";
 
-  let definitions = []
-  let flashcard = {}
-  let showDefinition = false
+  let definitions = [];
+  let flashcard = {};
+  let showDefinition = false;
 
   function setFlashCard() {
     const randomIndex = Math.floor(Math.random() * definitions.length);
-    flashcard = definitions[randomIndex]
-    showDefinition = false
+    const item = definitions[randomIndex];
+    try {
+      flashcard = {
+        word: item.word,
+        meaning: JSON.parse(item.meaning),
+      };
+    } catch (error) {
+      alert(error);
+    }
+
+    showDefinition = false;
   }
 
   onMount(async () => {
-    const response = await getWords()
+    const response = await getWords().then((resp) => resp.json());
 
-    definitions = (response && response.data && response.data.words) || []
+    definitions = (Array.isArray(response.Items) && response.Items) || [];
 
-    setFlashCard()
+    setFlashCard();
   });
 
   function handleClick() {
-    showDefinition = !showDefinition
+    showDefinition = !showDefinition;
   }
 </script>
+
+<section>
+  {#if flashcard && flashcard.word}
+    <div class="container" on:click={handleClick}>
+      {#if !showDefinition}
+        <h1>{flashcard.word}</h1>
+      {:else}
+        <div class="definition">
+          {#each flashcard.meaning as meaning}
+            {meaning}
+            <br />
+          {/each}
+        </div>
+      {/if}
+    </div>
+
+    <div class="cta-wrapper">
+      <a href="/flashcards" on:click={setFlashCard}>Next</a>
+    </div>
+  {/if}
+</section>
 
 <style>
   .container {
@@ -64,28 +94,3 @@
     text-decoration: none;
   }
 </style>
-
-<section>
-  {#if flashcard && flashcard.term}
-    <div class="container" on:click={handleClick}>
-      {#if !showDefinition }
-        <h1>{flashcard.term}</h1>
-      {:else }
-        <div class="definition">
-          {#each flashcard.definitions as { definition, example }}
-            {definition}
-            <br /><br />
-            {#if example}
-              <b>Ejemplo:</b>
-              {example}
-            {/if}
-          {/each}
-        </div>
-      {/if}
-    </div>
-
-    <div class="cta-wrapper">
-      <a href="/flashcards" on:click={setFlashCard}>Next</a>
-    </div>
-  {/if}
-</section>

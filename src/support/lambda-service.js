@@ -1,3 +1,13 @@
+export const getWords = () => {
+  const payload = {};
+
+  return fetch("/.netlify/functions/get-words", {
+    method: "post",
+    body: JSON.stringify(payload),
+    headers: { "Content-Type": "application/json" },
+  });
+};
+
 export const searchWord = (word, lang) => {
   const payload = {
     word,

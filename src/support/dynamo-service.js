@@ -8,20 +8,46 @@ AWS.config.update({
 
 const documentClient = new AWS.DynamoDB.DocumentClient();
 
-module.exports.saveWord = (word, lang, meaning) => {
+module.exports.getWords = () => {
+  const params = {
+    TableName: "word",
+    Limit: 97,
+  };
+
+  return documentClient.scan(params).promise();
+};
+
+const getWord = async (word) => {
+  const params = {
+    ExpressionAttributeValues: {
+      ":word": word,
+    },
+    FilterExpression: "word = :word",
+    TableName: "word",
+  };
+
+  return documentClient.scan(params).promise();
+};
+
+module.exports.saveWord = async (word, lang, meaning) => {
   if (!word || !lang || !Array.isArray(meaning) || !meaning.length) {
     return;
+  }
+
+  const newWord = `${word}_${lang}`;
+  const response = await getWord(newWord);
+
+  if (Array.isArray(response.Items) && response.Items.length > 0) {
+    return response;
   }
 
   const batch = [
     {
       PutRequest: {
         Item: {
-          word,
-          lang,
+          word: newWord,
           meaning: JSON.stringify(meaning),
-          created: new Date().toJSON(),
-          updated: new Date().toJSON(),
+          created: new Date().getTime(),
         },
       },
     },
@@ -33,7 +59,5 @@ module.exports.saveWord = (word, lang, meaning) => {
     },
   };
 
-  return documentClient
-    .batchWrite(params)
-    .promise()
+  return documentClient.batchWrite(params).promise();
 };
