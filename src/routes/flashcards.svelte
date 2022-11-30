@@ -82,6 +82,7 @@
   .cta-wrapper {
     position: fixed;
     width: calc(100% - 24px);
+    max-width: 54em;
     bottom: 12px;
   }
 
